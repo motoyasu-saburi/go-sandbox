@@ -6,6 +6,11 @@ import (
 	"strconv"
 )
 
+/**
+以下のCTFコード
+http://ksnctf.sweetduet.info/problem/6
+ */
+
 func httpReq(id string, pw string) (* http.Response) {
 	targetUrl := "http://ctfq.sweetduet.info:10080/~q6/"
 	parameters := url.Values{}
